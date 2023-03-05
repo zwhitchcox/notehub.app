@@ -10,7 +10,7 @@ export DROPLET_REGION=nyc1
 export DROPLET_USERNAME=root
 
 # bash scripts/create-droplet.sh
-# bash scripts/setup-droplet.sh
-bash scripts/generate-key-pair.sh
+bash scripts/setup-droplet.sh
+# bash scripts/generate-key-pair.sh
 
 echo "Deployment complete!"
