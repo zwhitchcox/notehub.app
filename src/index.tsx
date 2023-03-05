@@ -3,38 +3,24 @@ import ReactDOM from 'react-dom/client';
 import './styles.css';
 
 import {
-  createRoutesFromElements,
   createBrowserRouter,
-  Route,
   RouterProvider,
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
-import NotePage from './routes/note-page';
-import Root from './routes/root';
-import ErrorPage from './routes/error-page';
-import HomePage from './routes/home-page';
+import { store } from './store/store';
+import { routes } from './routes';
+import { Provider } from 'react-redux';
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route
-      path="/"
-      element={<Root />}
-      errorElement={<ErrorPage />}
-    >
-      <Route>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/note" element={<NotePage />} />
-      </Route>
-    </Route>
-  )
-)
+const router = createBrowserRouter(routes);
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
    <React.StrictMode>
+     <Provider store={store}>
       <RouterProvider router={router} />
+     </Provider>
     </React.StrictMode> 
 );
 
