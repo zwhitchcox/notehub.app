@@ -53,7 +53,7 @@ const SidebarContainer = ({ children, collapsed, toggleCollapsed }) => (
       <div className={`mt-auto`}>
       </div>
       <div className={`mt-auto`}>
-      <Link to={`/notes/new`}>
+      <Link to={`/notes/` + Date.now()}>
         <NewNoteButton collapsed={collapsed} />
       </Link>
       </div>

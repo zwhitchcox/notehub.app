@@ -49,7 +49,6 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
 
   useEffect(() => {
     if (socket) {
-      console.log('setting up listeners')
       socket.on('noteContent', (data: string) => {
         console.log('received content', Date.now());
         setContent(content);
@@ -67,6 +66,9 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
 
   useEffect(() => {
     canvas.canvas.clear();
+    // @ts-ignore
+    canvas.canvas.setBackgroundColor('#ffffff');
+    canvas.canvas.renderAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [note?.id]);
 
