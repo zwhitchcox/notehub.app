@@ -14,10 +14,6 @@ export const routes = [
         element: <Home />,
       },
       {
-        path: '/notes/new',
-        element: <Note />,
-      },
-      {
         path: '/notes/:noteId',
         element: <Note />,
       },
