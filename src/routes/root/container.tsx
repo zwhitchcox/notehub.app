@@ -1,8 +1,8 @@
 import React from "react";
 
-const MainContent = ({ children }) => (
-  <main className="flex h-screen">{children}</main>
+const Container = ({ children }) => (
+  <div className="flex h-screen">{children}</div>
 );
 
-export default MainContent;
+export default Container;
 

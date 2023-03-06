@@ -1,27 +1,34 @@
-export interface RootState {
-  notes: NotesState;
-}
+import { Action } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from './root';
+import { Note } from '../features/notes';
 
-export interface NotesState {
-  notes: Note[];
+// Action types
+export interface AddNoteAction extends Action<'notes/addNote'> {
+  payload: Note;
 }
-
-export interface Note {
-  id: number;
-  title: string;
-  content: string;
+export interface UpdateNoteAction extends Action<'notes/updateNote'> {
+  payload: Note;
 }
 
 export type NotesActionTypes = AddNoteAction | UpdateNoteAction;
 
-export const ADD_NOTE = 'ADD_NOTE';
-export interface AddNoteAction {
-  type: typeof ADD_NOTE;
-  payload: Note;
-}
+// Action creators
+export const addNoteAction = (note: Note): AddNoteAction => ({
+  type: 'notes/addNote',
+  payload: note,
+});
 
-export const UPDATE_NOTE = 'UPDATE_NOTE';
-export interface UpdateNoteAction {
-  type: typeof UPDATE_NOTE;
-  payload: Note;
-}
+export const updateNoteAction = (note: Note): UpdateNoteAction => ({
+  type: 'notes/updateNote',
+  payload: note,
+});
+
+// Thunks
+export type AppThunk<ReturnType = void> = ThunkAction<
+  ReturnType,
+  RootState,
+  unknown,
+  Action<string>
+>;
+

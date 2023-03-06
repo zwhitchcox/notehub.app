@@ -22,6 +22,7 @@ server {
 EOF
 
 ln -s /etc/nginx/sites-available/notehub.app /etc/nginx/sites-enabled/notehub.app
+rm /etc/nginx/sites-enabled/default
 
 # Restart nginx
 systemctl restart nginx

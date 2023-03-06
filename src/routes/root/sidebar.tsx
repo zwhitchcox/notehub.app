@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
-import NewNoteButton from "./new-note-button";
-import { RootState } from "../../store/types";
-import { useSelector } from "react-redux";
+import { NewNoteButton } from "./new-note-button";
+import { RootState } from "../../store/root";
+import { useDispatch, useSelector } from "react-redux";
+import { setCollapsed } from "../../features/sidebar";
+import { maximizeCanvas } from "../../features/canvas";
+import Link from "../../components/Link";
 
 
 const SidebarLink = ({ to, children, collapsed }) => (
@@ -24,8 +25,9 @@ const SidebarListItem = ({ children }) => (
   <li className="w-full mb-4">{children}</li>
 );
 
-const SidebarContainer = ({ children, collapsed, setCollapsed }) => (
+const SidebarContainer = ({ children, collapsed, toggleCollapsed }) => (
   <div
+    id="sidebar"
     className={`${
       collapsed ? "w-16" : "min-w-240"
     } bg-gray-900 text-white h-full flex flex-col justify-start items-left py-2 px-4 transition-all duration-300`}
@@ -36,17 +38,20 @@ const SidebarContainer = ({ children, collapsed, setCollapsed }) => (
       }`}
     >
       <div className="flex items-center w-full">
-        <button onClick={() => setCollapsed(!collapsed)}>
+        <button onClick={toggleCollapsed}>
           <FontAwesomeIcon icon={faBars} size="2x" />
         </button>
         {collapsed ? "" : (
-          <Link to={`/`} className="block text-3xl font-bold text-white no-underline mr-auto ml-auto w-full text-center uppercase font-handwritten px-4">
-              Notes
+          <Link to={`/`} className="block text-3xl font-bold text-white no-underline mr-auto ml-auto w-full text-center font-handwritten px-4">
+              NoteHub
           </Link>
         )}
       </div>
     </div>
     {children}
+
+      <div className={`mt-auto`}>
+      </div>
       <div className={`mt-auto`}>
       <Link to={`/notes/new`}>
         <NewNoteButton collapsed={collapsed} />
@@ -56,10 +61,18 @@ const SidebarContainer = ({ children, collapsed, setCollapsed }) => (
 );
 
 const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const dispatch = useDispatch();
+  const collapsed = useSelector((state: RootState) => state.sidebar.collapsed);
   const notes = useSelector((state: RootState) => state.notes);
+
+  const handleToggle = () => {
+    dispatch(setCollapsed(!collapsed));
+    setTimeout(() => {
+      dispatch(maximizeCanvas());
+    }, 0);
+  }
   return (
-    <SidebarContainer collapsed={collapsed} setCollapsed={setCollapsed}>
+    <SidebarContainer collapsed={collapsed} toggleCollapsed={handleToggle}>
       <nav>
         <SidebarList>
           {notes.notes.map((note) => (

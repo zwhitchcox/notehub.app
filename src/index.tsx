@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles.css';
+import './app/styles.css';
 
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
-import { store } from './store/store';
-import { routes } from './routes';
+import store from './store';
+import routes from './app/routes';
 import { Provider } from 'react-redux';
 
 const router = createBrowserRouter(routes);

@@ -1,7 +1,7 @@
-import Note from './routes/note';
-import Root from './routes/root/root';
-import Error from './routes/error';
-import Home from './routes/home';
+import Root from '../routes/root';
+import Error from '../routes/error';
+import Home from '../routes/home';
+import Note from '../routes/note';
 
 export const routes = [
   {
@@ -14,6 +14,10 @@ export const routes = [
         element: <Home />,
       },
       {
+        path: '/notes/new',
+        element: <Note />,
+      },
+      {
         path: '/notes/:noteId',
         element: <Note />,
       },
@@ -21,3 +25,4 @@ export const routes = [
   },
 ];
 
+export default routes;
