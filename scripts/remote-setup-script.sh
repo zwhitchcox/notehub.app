@@ -10,13 +10,20 @@ apt-get install -y git nginx
 cat > /etc/nginx/sites-available/notehub.app << EOF
 server {
   listen 80;
-  server_name notehub.app;
+  listen [::]:80;
+  server_name _;
 
-  root /var/www/notehub.app;
+  root /var/www/notehub.app/client/build;
   index index.html;
 
   location / {
-    try_files \$uri \$uri/ /index.html;
+    try_files $uri $uri/ /index.html;
+  }
+
+  location /socket.io {
+    proxy_pass http://localhost:4000;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
   }
 }
 EOF
