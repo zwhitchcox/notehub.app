@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { fabric } from 'fabric';
+import store from '../../store';
 
 export interface CanvasState {
   canvas: any;
@@ -48,6 +49,12 @@ const canvasSlice = createSlice({
         state.isDrawingMode = state.canvas.isDrawingMode;
       }
     },
+    setDrawingMode: (state, action: PayloadAction<boolean>) => {
+      if (state.canvas) {
+        state.canvas.isDrawingMode = action.payload;
+        state.isDrawingMode = state.canvas.isDrawingMode;
+      }
+    },
     maximizeCanvas: (state) => {
       const main = getDimensions(document.querySelector('main') as HTMLElement);
       const sidebar = getDimensions(document.querySelector('#sidebar') as HTMLElement);
@@ -77,36 +84,41 @@ function createCanvas() {
 }
 
 function addPanning(canvas: fabric.Canvas) {
-    // Add event listener for panning
-    let isDragging = false;
-    let selection = false;
-    let lastPosX = 0;
-    let lastPosY = 0;
-    canvas.on('mouse:down', (evt) => {
-      if (evt.e.altKey) {
-        selection = canvas.selection as boolean;
-        canvas.selection = false;
-        isDragging = true;
-        lastPosX = evt.e.clientX;
-        lastPosY = evt.e.clientY;
-      }
-    });
-    canvas.on('mouse:move', (evt) => {
-      if (isDragging) {
-        const delta = new fabric.Point(
-          evt.e.clientX - lastPosX,
-          evt.e.clientY - lastPosY
-        );
-        canvas.relativePan(delta);
-        lastPosX = evt.e.clientX;
-        lastPosY = evt.e.clientY;
-      }
-    });
-    canvas.on('mouse:up', () => {
-      isDragging = false;
-      canvas.selection = selection;
-    });
+  // Add event listener for panning
+  let isDragging = false;
+  let selection = false;
+  let lastPosX = 0;
+  let lastPosY = 0;
+
+  canvas.on('mouse:down', (evt) => {
+    if (evt.e.altKey) {
+      selection = canvas.selection as boolean;
+      canvas.selection = false;
+      isDragging = true;
+      lastPosX = evt.e.clientX;
+      lastPosY = evt.e.clientY;
+    }
+  });
+  
+  canvas.on('mouse:move', (evt) => {
+    if (isDragging) {
+      const delta = new fabric.Point(
+        evt.e.clientX - lastPosX,
+        evt.e.clientY - lastPosY
+      );
+      canvas.relativePan(delta);
+      lastPosX = evt.e.clientX;
+      lastPosY = evt.e.clientY;
+    }
+  });
+  
+  canvas.on('mouse:up', () => {
+    isDragging = false;
+    canvas.isDrawingMode = false;
+    store.dispatch(setDrawingMode(false));
+    canvas.selection = selection;
+  });
 }
 
-export const { setCanvas, toggleDrawingMode, maximizeCanvas } = canvasSlice.actions;
+export const { setCanvas, toggleDrawingMode, setDrawingMode, maximizeCanvas } = canvasSlice.actions;
 export default canvasSlice.reducer;

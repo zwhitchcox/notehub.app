@@ -34,8 +34,7 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
 
   useLayoutEffect(() => {
     dispatch(maximizeCanvas());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [dispatch]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
