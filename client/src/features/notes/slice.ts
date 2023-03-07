@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface Note {
   id: number;
   title: string;
-  content?: string;
+  content: string;
 }
 
 export interface NotesState {
@@ -27,10 +27,17 @@ const notesSlice = createSlice({
         state.notes[index] = action.payload;
       }
     },
+    loadNotes: (state) => {
+      const notes = JSON.parse(localStorage.getItem('notes') || '[]');
+      state.notes = notes;
+    },
+    saveNotes: (state) => {
+      localStorage.setItem('notes', JSON.stringify(state.notes));
+    },
   },
 });
 
-export const { addNote, updateNote } = notesSlice.actions;
+export const { addNote, updateNote, loadNotes, saveNotes } = notesSlice.actions;
 
 export default notesSlice.reducer;
 

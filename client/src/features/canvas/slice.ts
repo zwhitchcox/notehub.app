@@ -113,10 +113,12 @@ function addPanning(canvas: fabric.Canvas) {
   });
   
   canvas.on('mouse:up', () => {
-    isDragging = false;
-    canvas.isDrawingMode = false;
-    store.dispatch(setDrawingMode(false));
-    canvas.selection = selection;
+    if (isDragging) {
+      isDragging = false;
+      canvas.isDrawingMode = false;
+      store.dispatch(setDrawingMode(false));
+      canvas.selection = selection;
+    }
   });
 }
 

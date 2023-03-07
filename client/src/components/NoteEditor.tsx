@@ -1,10 +1,9 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/root';
-import { addNote, Note } from '../features/notes';
+import { addNote, Note, saveNotes } from '../features/notes';
 import { updateNote } from '../features/notes';
 import { maximizeCanvas, toggleDrawingMode } from '../features/canvas';
-import { useNavigate } from 'react-router-dom';
 import useSocket from '../features/notes/use-socket';
 
 interface Props {
@@ -34,7 +33,8 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
 
   useLayoutEffect(() => {
     dispatch(maximizeCanvas());
-  }, [dispatch]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
@@ -49,7 +49,6 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
   useEffect(() => {
     if (socket) {
       socket.on('noteContent', (data: string) => {
-        console.log('received content', Date.now());
         setContent(content);
         canvas.canvas?.loadFromJSON(JSON.parse(data), () => {});
       });
@@ -64,14 +63,14 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
   }, [socket, canvas.canvas])
 
   useEffect(() => {
+    setTitle('');
     canvas.canvas.clear();
     // @ts-ignore
     canvas.canvas.setBackgroundColor('#ffffff');
     canvas.canvas.renderAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [note?.id]);
+  }, [noteId]);
 
-  const navigate = useNavigate();
   const handleSave = () => {
     if (note) {
       dispatch(updateNote({
@@ -80,15 +79,13 @@ const NoteEditor: React.FC<Props> = ({ noteId }) => {
         content: content || note.content
       }));
     } else {
-      const id = noteId > 0 ? noteId : Date.now();
       dispatch(addNote({
-        id,
+        id: noteId,
         title,
         content
       }));
-
-      navigate(`/notes/${id}`);
     }
+    dispatch(saveNotes());
   };
 
   const handleToggleDrawingMode = () => {
