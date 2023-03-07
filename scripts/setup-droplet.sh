@@ -16,7 +16,7 @@ scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./scripts/remote
 ssh -o StrictHostKeyChecking=no root@$droplet_ip 'bash /root/setup-nginx.sh'
 
 # Copy setup script to Droplet
-scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./scripts/remote-setup-pm2.sh root@$droplet_ip:/root/setup-pm2.sh
+scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ./scripts/remote-setup-socket-server.sh root@$droplet_ip:/root/setup-socket-server.sh
 
 # Run setup script on Droplet
-ssh -o StrictHostKeyChecking=no root@$droplet_ip 'bash /root/setup-pm2.sh'
+ssh -o StrictHostKeyChecking=no root@$droplet_ip 'bash /root/setup-socket-server.sh'

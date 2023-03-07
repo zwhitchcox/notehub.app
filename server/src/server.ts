@@ -4,6 +4,9 @@ import { Server } from 'socket.io';
 
 const app = express();
 app.use(cors());
+app.get('/ping', (_req, res) => {
+  res.send('pong');
+});
 
 const server = app.listen(4000, () => {
   console.log('Server started on port 4000');

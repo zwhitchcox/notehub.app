@@ -5,7 +5,7 @@ import { RootState } from "../../store/root";
 import { useDispatch, useSelector } from "react-redux";
 import { setCollapsed } from "../../features/sidebar";
 import { maximizeCanvas } from "../../features/canvas";
-import Link from "../../components/Link";
+import { Link } from "react-router-dom";
 
 
 const SidebarLink = ({ to, children, collapsed }) => (

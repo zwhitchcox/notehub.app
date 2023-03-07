@@ -32,3 +32,12 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         source: .
         target: /var/www/notehub.app
+
+    - name: Restart socket server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: ${{ secrets.DROPLET_USERNAME }}
+        key: ${{ secrets.PRIVATE_KEY }}
+        script: sudo systemctl restart notehub
+        target: /var/www/notehub.app
