@@ -4,7 +4,7 @@ set -euxo pipefail
 
 # Install dependencies
 apt-get update -q
-apt-get install -y git nginx
+apt-get install -y nginx
 
 # Configure nginx
 cat > /etc/nginx/sites-available/notehub.app << EOF
@@ -33,6 +33,3 @@ rm /etc/nginx/sites-enabled/default
 
 # Restart nginx
 systemctl restart nginx
-
-echo "Deployment complete!"
-
