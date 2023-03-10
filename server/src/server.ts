@@ -9,6 +9,7 @@ app.get('/ping', (_req, res) => {
 });
 
 const server = app.listen(4000, () => {
+
   console.log('Server started on port 4000');
 });
 
@@ -34,9 +35,6 @@ io.on('connection', (socket) => {
 
   // Listen for join note event
   socket.on('join', (noteId: string) => {
-    if (noteId === 'NaN') {
-      return;
-    }
     console.log(`User joined note ${noteId}`);
     // Join the note room
     socket.join(noteId);
@@ -52,10 +50,7 @@ io.on('connection', (socket) => {
 
   // Listen for note content updates
   socket.on('noteContent', (data: {noteId: string, content: string}) => {
-    console.log(`Note content updated: ${data.noteId}`);
-    if (!notes[data.noteId]) {
-      notes[data.noteId] = { content: '', title: '' };
-    }
+    notes[data.noteId] ??= { content: '', title: '' };
     if (data.content === notes[data.noteId].content) {
       return;
     }
@@ -77,6 +72,18 @@ io.on('connection', (socket) => {
 
     // Broadcast the update to all other users in the same note room
     socket.to('' + data.noteId).emit('noteTitle', data);
+  });
+
+  // Listen for delete note event
+  socket.on('deleteNote', (noteId: string) => {
+    console.log(`Note deleted: ${noteId}`);
+    if (notes[noteId]) {
+      // Remove the note from the in-memory database
+      delete notes[noteId];
+
+      // Broadcast the deletion to all other users in the same note room
+      io.to(noteId).emit('noteDeleted', noteId);
+    }
   });
 
 

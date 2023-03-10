@@ -34,10 +34,13 @@ const notesSlice = createSlice({
     saveNotes: (state) => {
       localStorage.setItem('notes', JSON.stringify(state.notes));
     },
+    deleteNote: (state, action: PayloadAction<number>) => {
+      state.notes = state.notes.filter(note => note.id !== action.payload);
+    },
   },
 });
 
-export const { addNote, updateNote, loadNotes, saveNotes } = notesSlice.actions;
+export const { addNote, updateNote, deleteNote, loadNotes, saveNotes } = notesSlice.actions;
 
 export default notesSlice.reducer;
 

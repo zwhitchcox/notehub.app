@@ -1,7 +1,6 @@
-import notesReducer from './slice';
+import reducer from './slice';
 
 export * from './slice';
 
-export default notesReducer;
-
+export default reducer;
 

@@ -1,29 +1,45 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { NewNoteButton } from "./new-note-button";
 import { RootState } from "../../store/root";
 import { useDispatch, useSelector } from "react-redux";
 import { setCollapsed } from "../../features/sidebar";
-import { maximizeCanvas } from "../../features/canvas";
 import { Link } from "react-router-dom";
+import { deleteNote, saveNotes } from "../../features/notes";
+import { useCanvas } from "../../features/canvas";
 
 
-const SidebarLink = ({ to, children, collapsed }) => (
-  (collapsed ? null : <Link
+const SidebarLink = ({ to, children }) => (
+  <Link
     to={to}
     className="block w-full text-lg text-white no-underline py-2 px-4 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition duration-300"
   >
     {children}
-  </Link>)
+  </Link>
 );
 
 const SidebarList = ({ children }) => (
   <ul className="list-none m-0 p-0">{children}</ul>
 );
 
-const SidebarListItem = ({ children }) => (
-  <li className="w-full mb-4">{children}</li>
-);
+const SidebarListItem = ({ children, note }) => {
+  const dispatch = useDispatch();
+
+  const handleDelete = (e) => {
+    e.preventDefault();
+    dispatch(deleteNote(note.id));
+    dispatch(saveNotes());
+  }
+
+  return (
+    <li className="w-full mb-4">
+      <div className="flex justify-between items-center">
+        <SidebarLink to={`/notes/${note.id}`}><div>{children}</div></SidebarLink>
+        <button className="text-gray-500" onClick={handleDelete}><FontAwesomeIcon icon={faTrash} /></button>
+      </div>
+    </li>
+  );
+}
 
 const SidebarContainer = ({ children, collapsed, toggleCollapsed }) => (
   <div
@@ -64,23 +80,21 @@ const Sidebar = () => {
   const dispatch = useDispatch();
   const collapsed = useSelector((state: RootState) => state.sidebar.collapsed);
   const notes = useSelector((state: RootState) => state.notes);
+  const { maximizeCanvas } = useCanvas();
 
   const handleToggle = () => {
     dispatch(setCollapsed(!collapsed));
-    setTimeout(() => {
-      dispatch(maximizeCanvas());
-    }, 0);
+    setTimeout(maximizeCanvas, 0);
   }
   return (
     <SidebarContainer collapsed={collapsed} toggleCollapsed={handleToggle}>
       <nav>
         <SidebarList>
-          {notes.notes.map((note) => (
-            <SidebarListItem key={note.id}>
-              <SidebarLink collapsed={collapsed} to={`/notes/${note.id}`}>{note.title}</SidebarLink>
+          {collapsed ? null : notes.notes.map((note) => (
+            <SidebarListItem key={note.id} note={note}>
+              {note.title}
             </SidebarListItem>
-          ))}
-        </SidebarList>
+          ))}        </SidebarList>
       </nav>
     </SidebarContainer>
   )

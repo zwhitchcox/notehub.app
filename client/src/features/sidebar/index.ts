@@ -1,5 +1,6 @@
-import sidebarReducer from './slice';
+import reducer from './slice';
 
 export * from './slice';
 
-export default sidebarReducer;
+export default reducer;
+
